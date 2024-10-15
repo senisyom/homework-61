@@ -1,7 +1,9 @@
+import CountryList from "./CountryList/CountryList";
+
 const Countries = () => {
   return (
-    <div>
-      <aside className="bd-sidebar"></aside>
+      <div className="card" style={{ width: '25%' }}> 
+      <CountryList />
     </div>
   );
 };
