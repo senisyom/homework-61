@@ -1,15 +1,18 @@
-const CountryList = () => {
-    return (
-      <div>
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item list-group-item-action">An item</li>
-          <li className="list-group-item list-group-item-action">A second item</li>
-          <li className="list-group-item list-group-item-action">A third item</li>
-          <li className="list-group-item list-group-item-action">A fourth item</li>
-          <li className="list-group-item list-group-item-action">And a fifth one</li>
-        </ul>
-      </div>
-    );
+interface CountriesProps {
+  countries: string[];
 }
+const CountryList: React.FC<CountriesProps> = ({ countries }) => {
+  return (
+    <div>
+      <ul className="list-group list-group-flush">
+        {countries.map((name, index) => (
+          <li className="list-group-item list-group-item-action" key={index}>
+            {name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
-export default CountryList
+export default CountryList;
