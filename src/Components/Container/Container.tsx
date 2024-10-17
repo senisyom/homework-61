@@ -8,8 +8,9 @@ import axios from "axios";
 
 const Container = () => {
   const [countrieNames, setCountrieNames] = useState<string[]>([]);
-  const [countryData, setCountryData] = useState<string[]>([]);
+  const [countryData, setCountryData] = useState<null | APIcountries>(null);
   const [clickCountryId, setClickCountryId] = useState<null | number>(null);
+  const [borders, setBorders] = useState<[]>([]);
 
   const fetchData = useCallback(async () => {
     const response = await axios.get<APIcountries[]>(BASE_URL);
@@ -17,27 +18,48 @@ const Container = () => {
 
     const names = countriesResponse.map((country) => country.name);
     setCountrieNames(names);
-
-    console.log(names);
     console.log(response.status);
   }, []);
+
+  const getBorderCountries = async (
+    borderAlpha: string[]
+  ): Promise<string[]> => {
+    const promises = borderAlpha.map(async (alpha) => {
+      const response = await axios.get(
+        `https://restcountries.com/v2/alpha/${alpha}`
+      );
+      return response.data.name;
+    });
+    return Promise.all(promises);
+  };
 
   const fetchCountryData = async (name: string) => {
     try {
       const response = await axios.get(
         `https://restcountries.com/v2/name/${name}`
       );
-      setCountryData(response.data[0]);
+      const country = response.data[0];
+      setCountryData(country);
+
+      const bordersData = country.borders;
+      if (bordersData.length > 0) {
+        const borderNames = await getBorderCountries(bordersData);
+        setBorders(borderNames);
+      } else {
+        setBorders([]);
+      }
+
+      console.log("Границы:", bordersData);
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   const onCountryClick = (id: number) => {
-    setClickCountryId(id)
-    const countryName = countrieNames[id]
+    setClickCountryId(id);
+    const countryName = countrieNames[id];
     fetchCountryData(countryName);
-  }
+  };
 
   const addId = (id: number) => {
     setClickCountryId(id);
@@ -55,7 +77,7 @@ const Container = () => {
           id={clickCountryId}
           onClick={onCountryClick}
         />
-        <CountryInfo countryData = {countryData} />
+        <CountryInfo countryData={countryData} borders={borders} />
       </div>
     </div>
   );
