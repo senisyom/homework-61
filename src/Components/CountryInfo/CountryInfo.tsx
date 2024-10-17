@@ -1,9 +1,10 @@
-import CountryContent from "./CountryContent/CountryContent"
+import CountryContent from "./CountryContent/CountryContent";
 
 const CountryInfo = () => {
+    
     return (
         <div className="card card-body ms-3 me-3 d-flex">
-            <CountryContent/>
+            <CountryContent />
         </div>
     )
 }

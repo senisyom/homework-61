@@ -8,6 +8,7 @@ import axios from "axios";
 
 const Container = () => {
   const [countrieNames, setCountrieNames] = useState<string[]>([]);
+  const [clickCountryId, setClickCountryId] = useState<null | number>(null)
 
   const fetchData = useCallback(async () => {
     const response = await axios.get<APIcountries[]>(BASE_URL);
@@ -16,8 +17,12 @@ const Container = () => {
     const names = countriesResponse.map((country) => country.name);
     setCountrieNames(names);
     console.log(names);
-    console.log(response.status);
+    console.log(response.status); 
   }, []);
+
+  const addId = (id: number) => {
+    setClickCountryId(id)
+  }
 
   useEffect(() => {
     void fetchData();
@@ -26,8 +31,8 @@ const Container = () => {
   return (
     <div>
       <div className="container d-flex m-5">
-        <Countries countries={countrieNames} />
-        <CountryInfo />
+        <Countries countries={countrieNames} id={clickCountryId} onClick={addId} />
+        <CountryInfo/>
       </div>
     </div>
   );
